@@ -1,0 +1,259 @@
+﻿<Window
+    x:Class="OilLevelDetectionSystem.WinUI.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:OilLevelDetectionSystem.WinUI"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:charts="using:Syncfusion.UI.Xaml.Charts"
+    xmlns:media="using:Microsoft.UI.Xaml.Media"
+    mc:Ignorable="d">
+
+    <Grid x:Name="RootGrid" Background="{StaticResource BackgroundColor}" PointerMoved="RootGrid_PointerMoved">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="10"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="10"/>
+        </Grid.RowDefinitions>
+
+        <Grid x:Name="AppBarTitle" Grid.Row="0" SizeChanged="Grid_SizeChanged_1">
+            <Grid.Background>
+                <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                    <GradientStop Color="#131b54" Offset="0"/>
+                    <GradientStop Color="#183fa3" Offset="1"/>
+                </LinearGradientBrush>
+            </Grid.Background>
+
+            <RelativePanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+
+                <StackPanel x:Name="DraggableArea" RelativePanel.AlignLeftWithPanel="True" Orientation="Horizontal"
+                            RelativePanel.AlignVerticalCenterWithPanel="True" Padding="0,0,30,0">
+                    <Image Source="ms-appx:///Assets/Square44x44Logo.png"
+                       x:Name="Logo"
+                       Width="30"
+                       Height="30"
+                       Stretch="UniformToFill"
+                       VerticalAlignment="Center"
+                       Margin="12,0,0,0"/>
+                    <TextBlock x:Name="AppTitle"
+                           Text="{StaticResource AppName}"
+                           FontWeight="Bold"
+                           FontSize="16"
+                           VerticalAlignment="Center"/>
+                </StackPanel>
+
+                <MenuBar x:Name="CommandArea" RelativePanel.RightOf="DraggableArea">
+                    <MenuBarItem Title="Data(D)" Foreground="{StaticResource ForegroundBrush}" >
+                        <MenuBarItem.KeyboardAccelerators>
+                            <KeyboardAccelerator Key="D"/>
+                        </MenuBarItem.KeyboardAccelerators>
+                        <MenuFlyoutItem Text="Export" >
+                        </MenuFlyoutItem>
+                    </MenuBarItem>
+                    <MenuBarItem Title="Settings(S)" Foreground="{StaticResource ForegroundBrush}" >
+                        <MenuBarItem.KeyboardAccelerators>
+                            <KeyboardAccelerator Key="S"/>
+                        </MenuBarItem.KeyboardAccelerators>
+                        <ToggleMenuFlyoutItem IsChecked="False" x:Name="FullScreen" Text="全屏" Click="ToggleMenuFlyoutItem_Click" >
+                            <ToggleMenuFlyoutItem.KeyboardAccelerators>
+                                <KeyboardAccelerator Key="F"/>
+                            </ToggleMenuFlyoutItem.KeyboardAccelerators>
+                        </ToggleMenuFlyoutItem>
+                    </MenuBarItem>
+                    <MenuBarItem Title="About(A)" x:Name="AboutMenuBarItem" Tapped="MenuBarItem_Tapped" >
+                        <MenuBarItem.KeyboardAccelerators>
+                            <KeyboardAccelerator Key="A" Invoked="KeyboardAccelerator_Invoked"/>
+                        </MenuBarItem.KeyboardAccelerators>
+                        <MenuBarItem.ContextFlyout>
+                            <Flyout>
+                                <Grid>
+                                    <StackPanel Orientation="Vertical" Padding="8" Spacing="10">
+                                        <RichTextBlock Foreground="WhiteSmoke" LineHeight="25">
+                                            <Paragraph>
+                                                <Run Text="{StaticResource AppName}"/>
+                                            </Paragraph>
+                                            <Paragraph>
+                                                <Run Text="A WinUI 3 app designed and developed by Zhe Fang"/>
+                                            </Paragraph>
+                                            <Paragraph>
+                                                <Run Text="© 2022 Zhe Fang      version - 1.0.0.0" Foreground="Gray"/>
+                                            </Paragraph>
+                                        </RichTextBlock>
+                                    </StackPanel>
+                                </Grid>
+                            </Flyout>
+                        </MenuBarItem.ContextFlyout>
+                    </MenuBarItem>
+                </MenuBar>
+
+                <TextBlock x:Name="TimeTextBlock" RelativePanel.AlignVerticalCenterWith="CommandArea" RelativePanel.LeftOf="SystemControlArea" />
+
+                <Grid RelativePanel.Below="CommandArea" RelativePanel.AlignBottomWithPanel="True" x:Name="Placeholder" Height="10"
+                      Background="{StaticResource BackgroundBrush}" BorderBrush="{StaticResource BorderBrush}" BorderThickness="2,2,0,0"
+                      RelativePanel.RightOf="DraggableArea" RelativePanel.AlignRightWithPanel="True"/>
+
+                <Grid RelativePanel.LeftOf="Placeholder" RelativePanel.AlignBottomWithPanel="True" Height="2" Background="{StaticResource BorderBrush}"
+                      RelativePanel.AlignLeftWithPanel="True"/>
+
+                <Grid Width="120" RelativePanel.AlignTopWithPanel="True" x:Name="SystemControlArea" RelativePanel.AlignRightWithPanel="True"
+                      RelativePanel.AlignBottomWithPanel="True"/>
+            </RelativePanel>
+        </Grid>
+
+        <Grid Grid.Row="2" SizeChanged="Grid_SizeChanged">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="10"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="10"/>
+                <ColumnDefinition Width="4*"/>
+                <ColumnDefinition Width="10"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="10"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="10"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <local:HeaderContentPanel x:Name="SensorPanel" Header="Sensor monitoring" WarnColor="Red" Grid.Row="0">
+                    <TextBlock x:Name="InfoTextBlock" Text="Discharge failure" FontWeight="Bold" Margin="30,30,30,50" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                Foreground="Red" FontSize="16"/>
+                </local:HeaderContentPanel>
+
+                <local:HeaderContentPanel Header="Alarm information" Grid.Row="2">
+                    <ListView ItemsSource="{x:Bind WarnInfos, Mode=OneWay}">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <RelativePanel>
+                                    <TextBlock Text="{Binding Date}" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignHorizontalCenterWithPanel="True"
+                                               Foreground="{Binding WarnBrush}"/>
+                                    <TextBlock Text="{Binding Message}" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignHorizontalCenterWithPanel="True"
+                                               Foreground="{Binding WarnBrush}"/>
+                                </RelativePanel>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </local:HeaderContentPanel>
+                <TextBox PlaceholderText="Please input the port (e.g. COM8)" TextChanged="TextBox_TextChanged" Grid.Row="4"/>
+
+                <Button Click="Button_Click" Content="Start monitoring" x:Name="ListenButton" Grid.Row="5"/>
+
+            </Grid>
+
+            <Grid Grid.Column="3">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="10"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <ListView x:Name="ListView"
+                          Grid.Row="0"
+                          ScrollViewer.VerticalScrollMode="Disabled"
+                          ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                      ItemsSource="{x:Bind GasInfos, Mode=OneWay}"
+                      SelectionMode="None"
+                      SizeChanged="ListView_SizeChanged"
+                      VerticalAlignment="Top">
+                    <ListView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal"/>
+                        </ItemsPanelTemplate>
+                    </ListView.ItemsPanel>
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Style.Setters>
+                                <Setter Property="Padding" Value="0,0,10,0"/>
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            </Style.Setters>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <local:HeaderContentPanel Header="{Binding Name}" Width="{Binding Width, Mode=OneWay}">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+                                    <local:GaugeControl Grid.Row="0" Margin="10,0" Header="ppm" Value="{Binding Value, Mode=OneWay}" Min="0" Max="3000"/>
+                                    <Grid Grid.Row="1" Margin="0,0,0,10">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="2*"/>
+                                            <ColumnDefinition Width="5*"/>
+                                            <ColumnDefinition Width="2*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid Grid.Column="1" BorderThickness="{StaticResource BorderThickness}" BorderBrush="{StaticResource BorderBrush}"
+                                            CornerRadius="5" Padding="5,0">
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                                <TextBlock Text="{Binding Value, Mode=OneWay}" Foreground="#f1f5be" FontSize="20"/>
+                                                <TextBlock Text="ppm" VerticalAlignment="Center" Foreground="WhiteSmoke"/>
+                                            </StackPanel>
+                                        </Grid>
+                                    </Grid>
+                                </Grid>
+                            </local:HeaderContentPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+
+                <local:HeaderContentPanel Header="Real time monitoring" Grid.Row="2">
+                    <charts:SfCartesianChart Margin="5" Foreground="WhiteSmoke">
+
+                        <charts:SfCartesianChart.ZoomPanBehavior>
+                            <charts:ChartZoomPanBehavior ZoomMode="X" EnableMouseWheelZooming="True" EnablePinchZooming="True" EnableDirectionalZooming="True"/>
+                        </charts:SfCartesianChart.ZoomPanBehavior>
+
+                        <charts:SfCartesianChart.Legend>
+                            <charts:ChartLegend Placement="Bottom"/>
+                        </charts:SfCartesianChart.Legend>
+
+                        <charts:SfCartesianChart.XAxes>
+                            <charts:DateTimeAxis/>
+                        </charts:SfCartesianChart.XAxes>
+
+                        <charts:SfCartesianChart.YAxes>
+                            <charts:NumericalAxis/>
+                        </charts:SfCartesianChart.YAxes>
+
+                        <charts:FastLineBitmapSeries
+                                                    ItemsSource="{x:Bind GasInfos[0].GasPoints, Mode=OneWay}"
+                                                    XBindingPath="DateTime" 
+                                                    YBindingPath="Value"
+                                                    EnableTooltip="True"
+                                                    Label="{x:Bind GasInfos[0].Name}"
+                                                    EnableAnimation="True"/>
+                        <charts:FastLineBitmapSeries
+                                                    ItemsSource="{x:Bind GasInfos[1].GasPoints, Mode=OneWay}"
+                                                    XBindingPath="DateTime" 
+                                                    YBindingPath="Value"
+                                                    EnableTooltip="True"
+                                                    Label="{x:Bind GasInfos[1].Name}"
+                                                    EnableAnimation="True"/>
+                        <charts:FastLineBitmapSeries
+                                                    ItemsSource="{x:Bind GasInfos[2].GasPoints, Mode=OneWay}"
+                                                    XBindingPath="DateTime" 
+                                                    YBindingPath="Value"
+                                                    EnableTooltip="True"
+                                                    Label="{x:Bind GasInfos[2].Name}"
+                                                    EnableAnimation="True"/>
+                        <charts:FastLineBitmapSeries
+                                                    ItemsSource="{x:Bind GasInfos[3].GasPoints, Mode=OneWay}"
+                                                    XBindingPath="DateTime" 
+                                                    YBindingPath="Value"
+                                                    EnableTooltip="True"
+                                                    Label="{x:Bind GasInfos[3].Name}"
+                                                    EnableAnimation="True"/>
+                    </charts:SfCartesianChart>
+
+                </local:HeaderContentPanel>
+
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>

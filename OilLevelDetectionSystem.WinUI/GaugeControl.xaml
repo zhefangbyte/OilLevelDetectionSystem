@@ -1,0 +1,73 @@
+﻿<UserControl
+    x:Class="OilLevelDetectionSystem.WinUI.GaugeControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:OilLevelDetectionSystem.WinUI"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:gauges="using:Syncfusion.UI.Xaml.Gauges"
+    mc:Ignorable="d"
+    RequestedTheme="Dark">
+
+    <UserControl.Resources>
+        <Style x:Key="MajorTickStyle" TargetType="Line">
+            <Setter Property="Stroke" Value="WhiteSmoke"/>
+            <Setter Property="StrokeThickness" Value="2.3" />
+        </Style>
+        <Style x:Key="MinorTickStyle" TargetType="Line">
+            <Setter Property="Stroke" Value="WhiteSmoke"/>
+            <Setter Property="StrokeThickness" Value="1.6" />
+        </Style>
+    </UserControl.Resources>
+
+    <Grid x:Name="RootGrid" SizeChanged="Grid_SizeChanged">
+        <gauges:SfRadialGauge >
+            <gauges:SfRadialGauge.Axes>
+                <gauges:RadialAxis x:Name="RadialAxis" Minimum="{x:Bind Min, Mode=OneWay}" Maximum="{x:Bind Max, Mode=OneWay}" 
+                                   MajorTickStyle="{StaticResource MajorTickStyle}" MinorTickStyle="{StaticResource MinorTickStyle}" MinorTicksPerInterval="10"
+                                   LabelOffset="24" OffsetUnit="Pixel" >
+
+                    <gauges:RadialAxis.LabelTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Text}" FontSize="14" />
+                        </DataTemplate>
+                    </gauges:RadialAxis.LabelTemplate>
+
+                    <gauges:RadialAxis.Ranges>
+                        <gauges:GaugeRange StartValue="{x:Bind Min, Mode=OneWay}" EndValue="{x:Bind Middle, Mode=OneWay}" >
+                            <gauges:GaugeRange.Background>
+                                <LinearGradientBrush StartPoint="0,1" EndPoint="1,0">
+                                    <GradientStop Color="Green" Offset="0"/>
+                                    <GradientStop Color="Yellow" Offset="1"/>
+                                </LinearGradientBrush>
+                            </gauges:GaugeRange.Background>
+                        </gauges:GaugeRange>
+                        <gauges:GaugeRange StartValue="{x:Bind Middle, Mode=OneWay}" EndValue="{x:Bind Max, Mode=OneWay}" >
+                            <gauges:GaugeRange.Background>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                    <GradientStop Color="Yellow" Offset="0"/>
+                                    <GradientStop Color="Red" Offset="1"/>
+                                </LinearGradientBrush>
+                            </gauges:GaugeRange.Background>
+                        </gauges:GaugeRange>
+                    </gauges:RadialAxis.Ranges>
+
+                    <gauges:RadialAxis.Pointers>
+                        <gauges:NeedlePointer Value="{x:Bind Value, Mode=OneWay}" NeedleLengthUnit="Factor" NeedleLength="0.75" NeedleFill="#ef874f"
+                                              NeedleEndWidth="5" NeedleStartWidth="1" KnobFill="#ef874f" EnableAnimation="True"/>
+                    </gauges:RadialAxis.Pointers>
+
+                    <gauges:RadialAxis.Annotations>
+                        <gauges:GaugeAnnotation PositionFactor="0">
+                            <gauges:GaugeAnnotation.Content>
+                                <TextBlock Text="ppm" Margin="0,-35,0,0" Foreground="WhiteSmoke" FontSize="14"/>
+                            </gauges:GaugeAnnotation.Content>
+                        </gauges:GaugeAnnotation>
+                    </gauges:RadialAxis.Annotations>
+
+                </gauges:RadialAxis>
+            </gauges:SfRadialGauge.Axes>
+        </gauges:SfRadialGauge>
+
+    </Grid>
+</UserControl>

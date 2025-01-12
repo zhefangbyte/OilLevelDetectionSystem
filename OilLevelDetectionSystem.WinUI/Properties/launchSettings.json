@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "OilLevelDetectionSystem.WinUI (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "OilLevelDetectionSystem.WinUI (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
